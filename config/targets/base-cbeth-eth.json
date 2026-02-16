@@ -1,0 +1,11 @@
+{
+  "name": "beefy-base-cbeth-eth",
+  "chain": "base",
+  "chainId": 8453,
+  "strategy": "0x47bA57B0522bdd422B81f7a2e075B2fE1Db3f99B",
+  "vault": "0xa06C351648dA44078a36c811285ee5eBE74bA089",
+  "notes": {
+    "strategyLogic": "StandardStrategyCurveConvexL2",
+    "callRewardHardcodedZero": true
+  }
+}

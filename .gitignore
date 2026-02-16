@@ -1,0 +1,33 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.*
+!.env.example
+config/run.env
+
+# OS / Editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Foundry / Anvil
+out/
+cache/
+broadcast/
+
+# Local artifacts
+tmp/
+*.tmp
+*.log
+
+# Ghost audit generated outputs (keep markdown reports only)
+reports/*-offset-*.json
+reports/*-merged.json
+reports/*-summary.json

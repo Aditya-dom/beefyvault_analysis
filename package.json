@@ -1,0 +1,19 @@
+{
+  "name": "beefyvault",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ghost-audit": "node scripts/ghost-audit.mjs",
+    "ghost-audit:parallel": "bash scripts/run-ghost-audit-parallel.sh",
+    "ghost-audit:merge": "node scripts/merge-ghost-reports.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "viem": "^2.46.0"
+  }
+}
