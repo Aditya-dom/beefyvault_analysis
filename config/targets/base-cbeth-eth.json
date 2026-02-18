@@ -6,6 +6,10 @@
   "vault": "0xa06C351648dA44078a36c811285ee5eBE74bA089",
   "notes": {
     "strategyLogic": "StandardStrategyCurveConvexL2",
-    "callRewardHardcodedZero": true
+    "callRewardHardcodedZero": true,
+    "curveRewardTokens": {
+      "CRV": "0x8ee73c484A26e0A5df2Ee2a4960B789967dd0415",
+      "CVX": "0x2b6b68e994e6366050b327341851f50645068228"
+    }
   }
 }

@@ -18,6 +18,8 @@ STEP="${STEP:-40}"
 LOG_DIR="${LOG_DIR:-/tmp/ghost-audit}"
 OFFSETS_CSV="${OFFSETS_CSV:-0,20}"
 BASE_PORT="${BASE_PORT:-8545}"
+ANVIL_START_STAGGER_SECONDS="${ANVIL_START_STAGGER_SECONDS:-2}"
+WORKER_START_STAGGER_SECONDS="${WORKER_START_STAGGER_SECONDS:-5}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -112,9 +114,20 @@ for i in "${!OFFSETS[@]}"; do
       >"$log_path" 2>&1 &
     pid="$!"
 
-    # Give it a moment to panic (or bind the port).
-    sleep 1
-    if kill -0 "$pid" 2>/dev/null; then
+    # Wait for explicit readiness signal from anvil.
+    ready=0
+    for _ in {1..20}; do
+      if ! kill -0 "$pid" 2>/dev/null; then
+        break
+      fi
+      if grep -q "Listening on 127.0.0.1:${port}" "$log_path" 2>/dev/null; then
+        ready=1
+        break
+      fi
+      sleep 0.5
+    done
+
+    if [[ "$ready" -eq 1 ]]; then
       ANVIL_PIDS+=("$pid")
       started=1
       break
@@ -122,12 +135,17 @@ for i in "${!OFFSETS[@]}"; do
 
     echo "Anvil failed to start on port $port (attempt $attempt). Retrying..." >&2
     tail -n 20 "$log_path" 2>/dev/null >&2 || true
+    kill "$pid" 2>/dev/null || true
     sleep 1
   done
 
   if [[ "$started" -ne 1 ]]; then
     echo "Anvil failed to start on port $port after retries. See $log_path" >&2
     exit 1
+  fi
+
+  if [[ "${ANVIL_START_STAGGER_SECONDS}" != "0" ]]; then
+    sleep "${ANVIL_START_STAGGER_SECONDS}"
   fi
 done
 
@@ -150,6 +168,10 @@ for i in "${!OFFSETS[@]}"; do
   RUN_TAG="$tag" \
     npm run ghost-audit >"$LOG_DIR/ghost-$tag.log" 2>&1 &
   JOB_PIDS+=("$!")
+
+  if [[ "${WORKER_START_STAGGER_SECONDS}" != "0" ]]; then
+    sleep "${WORKER_START_STAGGER_SECONDS}"
+  fi
 done
 
 failed=0

@@ -5,7 +5,7 @@
 - Strategy wiring + reward/swap topology validation: **completed**
 - callReward() blind-keeper check: **completed** (`callReward() = 0` onchain)
 - Metric upgrades (want-denominated PnL, L1 data fee, route attribution): **implemented**
-- 6-hour x 20-block full sweeps for 3 harvests: **blocked by public RPC rate limits**
+- 6-hour x 20-block full sweeps for 3 harvests: **still blocked by RPC throughput limits**
 
 ## Calibrated Smoke Result (latest harvest)
 
@@ -24,8 +24,14 @@ Source file:
 
 ## Blocker Detail
 
-Public Base RPC endpoints are throttling `anvil_reset` and fork genesis state pulls under 6-hour sweep load (HTTP `429`), causing worker bootstrap/reset failures before meaningful coverage can complete.
+- A true 6-hour Base window at 20-block cadence is large: for block `41493767`, computed start is `41482967`, which is **541 simulation points**.
+- With the provided archive endpoint:
+  - Single-worker flow is stable but slow for 541 points.
+  - Multi-worker sharding improves speed but can still trigger sustained provider throttling (`HTTP 429`) during repeated `anvil_reset` / storage fetch cycles.
+- Runner reliability has been improved:
+  - waits for explicit `Listening on` before starting workers
+  - supports configurable worker/anvil start staggering to smooth bursts
 
 ## Next Step To Unblock E2E
 
-Use a dedicated Base archive RPC (keyed endpoint) and rerun the same pipeline with current scripts.
+Use a higher-throughput dedicated Base archive endpoint (paid/raised limits) and rerun the same pipeline with current scripts.
