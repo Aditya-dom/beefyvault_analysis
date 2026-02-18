@@ -80,4 +80,3 @@ node scripts/render-last3-report.mjs
 ## Notes
 
 - Full 6-hour windows at 20-block cadence are heavy; public/free RPC tiers often throttle under repeated fork resets.
-- Keep secrets out of tracked files (`config/run.env` is gitignored).
