@@ -1,5 +1,8 @@
 # Beefy Vault Optimizer (Ghost Audit Harness)
 
+## Note
+- Run sims on [tenderly](https://tenderly.co/) for better smooth results.
+
 Fork-based simulation harness to quantify harvest execution leakage for Beefy-style strategies (gas timing + swap timing).
 
 ## Current Target
